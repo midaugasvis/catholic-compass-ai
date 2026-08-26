@@ -1,0 +1,195 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Catholic Compass AI — Alpha v0.6</title>
+  <link rel="stylesheet" href="styles.css"/>
+</head>
+<body>
+<div class="app">
+  <aside class="sidebar" aria-label="Main navigation">
+    <div class="brand">
+      <div class="mark">✦</div>
+      <div><strong>Catholic Compass AI</strong><span>Alpha v0.6</span></div>
+    </div>
+
+    <div class="language-box">
+      <label for="languageSelect" data-i18n="language">Language</label>
+      <select id="languageSelect" aria-label="Language">
+        <option value="en">English</option>
+        <option value="es">Español</option>
+        <option value="pt">Português</option>
+        <option value="fr">Français</option>
+      </select>
+    </div>
+
+    <nav>
+      <button class="nav active" data-view="guide" data-i18n="nav_talk">Talk to Compass</button>
+      <button class="nav" data-view="journey" data-i18n="nav_journey">My Journey</button>
+      <button class="nav" data-view="insights" data-i18n="nav_insights">Monthly Progress</button>
+      <button class="nav" data-view="examine" data-i18n="nav_examine">Examination</button>
+      <button class="nav" data-view="prayers" data-i18n="nav_prayers">Prayers</button>
+      <button class="nav" data-view="privacy" data-i18n="nav_privacy">Privacy</button>
+<span class="nav setup-link" style="opacity:.65;cursor:default">Server-managed AI & Voice</span>
+    </nav>
+
+    <div class="access-box"><span id="aiStatus" class="backend-status">Checking AI…</span>
+      <strong data-i18n="audio_access">Audio accessibility</strong>
+      <small data-i18n="audio_access_desc">Every generated outcome can be read aloud in the selected language.</small>
+    </div>
+
+    <div class="trust">
+      <span class="shield">✓</span>
+      <div>
+        <strong data-i18n="trust_title">Guidance, not absolution</strong>
+        <small data-i18n="trust_desc">This tool does not replace a priest or the Sacrament of Reconciliation.</small>
+      </div>
+    </div>
+  </aside>
+
+  <main>
+    <section id="guide" class="view active-view">
+      <header>
+        <div>
+          <span class="eyebrow" data-i18n="guide_kicker">Catholic guidance in plain language</span>
+          <h1 data-i18n="guide_title">Tell me what happened.</h1>
+          <p data-i18n="guide_desc">You don’t need to know the name of the sin. Explain the situation in your own words.</p>
+        </div>
+      </header>
+
+      <div class="guide-grid">
+        <section class="conversation">
+          <div class="welcome card">
+            <div class="ai-avatar">✦</div>
+            <div>
+              <strong data-i18n="welcome_title">I’m here to help you understand the next step.</strong>
+              <p data-i18n="welcome_desc">I’ll separate Church teaching from a possible assessment, then suggest practical and spiritual next steps.</p>
+            </div>
+          </div>
+
+          <div id="chat"></div>
+
+          <div class="composer card">
+            <textarea id="situation" data-i18n-placeholder="situation_ph" placeholder="Example: I drove after drinking and had passengers in the car."></textarea>
+            <div class="examples">
+              <button data-example-key="drunk" data-i18n="ex_drunk">Drunk driving</button>
+              <button data-example-key="lie" data-i18n="ex_lie">Lying</button>
+              <button data-example-key="mass" data-i18n="ex_mass">Missed Mass</button>
+              <button data-example-key="cruel" data-i18n="ex_cruel">Cruel words</button>
+            </div>
+            <button id="ask" class="primary" data-i18n="ask_btn">Help me understand what to do</button>
+          </div>
+        </section>
+
+        <aside class="sidepanel">
+          <div class="card steps-card">
+            <span class="eyebrow" data-i18n="response_model">How Compass responds</span>
+            <div class="step"><b>1</b><span><strong data-i18n="step1">Church teaching</strong><small data-i18n="step1s">Relevant Catechism / Scripture</small></span></div>
+            <div class="step"><b>2</b><span><strong data-i18n="step2">Possible assessment</strong><small data-i18n="step2s">Grave matter, venial, or uncertain</small></span></div>
+            <div class="step"><b>3</b><span><strong data-i18n="step3">Reconciliation journey</strong><small data-i18n="step3s">Track each practical and spiritual step</small></span></div>
+            <div class="step"><b>4</b><span><strong data-i18n="step4">Prevention guidance</strong><small data-i18n="step4s">Avoid / Do instead / Scripture</small></span></div>
+          </div>
+          <div class="card principles">
+            <span class="eyebrow" data-i18n="trust_principles">Trust principles</span>
+            <p data-i18n="tp1">Never invents a fixed “price” for forgiveness.</p>
+            <p data-i18n="tp2">Never claims to absolve sins.</p>
+            <p data-i18n="tp3">Keeps progress separate from sacramental forgiveness.</p>
+            <p data-i18n="tp4">Encourages Confession when appropriate.</p>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <section id="journey" class="view">
+      <header>
+        <div>
+          <span class="eyebrow" data-i18n="journey_kicker">Reconciliation journey</span>
+          <h1 data-i18n="journey_title">Complete the next good step.</h1>
+          <p data-i18n="journey_desc">Each case stays open until you complete the practical and spiritual actions attached to it.</p>
+        </div>
+      </header>
+      <div id="journeyList" class="journey-list"></div>
+    </section>
+
+    <section id="insights" class="view">
+      <header>
+        <div>
+          <span class="eyebrow" data-i18n="insights_kicker">Personal progress</span>
+          <h1 data-i18n="insights_title">Your monthly reconciliation curve.</h1>
+          <p data-i18n="insights_desc">Track opened and completed journeys without pretending the app itself grants forgiveness.</p>
+        </div>
+      </header>
+      <div class="insight-grid">
+        <div class="card metric"><span data-i18n="open_cases">Open journeys</span><strong id="openMetric">1</strong></div>
+        <div class="card metric"><span data-i18n="closed_cases">Completed journeys</span><strong id="closedMetric">0</strong></div>
+        <div class="card metric"><span data-i18n="completion_rate">Completion rate</span><strong id="completionMetric">0%</strong></div>
+      </div>
+      <div class="chart-card card">
+        <div class="chart-head"><strong data-i18n="monthly_curve">Monthly curve</strong><span data-i18n="chart_note">Demo data + your current activity</span></div>
+        <div class="chart" id="chart"></div>
+      </div>
+    </section>
+
+    <section id="examine" class="view">
+      <header><div><span class="eyebrow" data-i18n="examine_kicker">Examination of conscience</span><h1 data-i18n="examine_title">Reflect without a checklist feeling.</h1></div></header>
+      <div class="theme-grid">
+        <article class="theme card"><span>01</span><h3 data-i18n="theme1">God & worship</h3><p data-i18n="theme1d">Prayer, Mass, reverence, trust in God.</p></article>
+        <article class="theme card"><span>02</span><h3 data-i18n="theme2">Truth & honesty</h3><p data-i18n="theme2d">Lying, deception, broken promises, gossip.</p></article>
+        <article class="theme card"><span>03</span><h3 data-i18n="theme3">Life & safety</h3><p data-i18n="theme3d">Anger, violence, reckless behaviour, care for others.</p></article>
+        <article class="theme card"><span>04</span><h3 data-i18n="theme4">Relationships</h3><p data-i18n="theme4d">Marriage, family, forgiveness, cruelty, neglect.</p></article>
+      </div>
+    </section>
+
+    <section id="prayers" class="view">
+      <header><div><span class="eyebrow" data-i18n="prayers_kicker">Prayer library</span><h1 data-i18n="prayers_title">Open, read, and listen.</h1><p data-i18n="prayers_desc">Suggested prayers are clickable so nobody needs to know them by heart.</p></div></header>
+      <div id="prayerGrid" class="prayer-grid"></div>
+    </section>
+
+    <section id="privacy" class="view">
+      <header><div><span class="eyebrow" data-i18n="privacy_kicker">Privacy center</span><h1 data-i18n="privacy_title">Sensitive by design.</h1><p data-i18n="privacy_desc">The production app should make its privacy model explicit, understandable, and technically true.</p></div></header>
+      <div class="privacy-grid">
+        <article class="card privacy-card"><strong data-i18n="priv1">Encrypted storage</strong><p data-i18n="priv1d">Production target: encrypt sensitive records at rest and in transit.</p></article>
+        <article class="card privacy-card"><strong data-i18n="priv2">No advertising profile</strong><p data-i18n="priv2d">Do not monetize or sell spiritual-history data.</p></article>
+        <article class="card privacy-card"><strong data-i18n="priv3">User-controlled deletion</strong><p data-i18n="priv3d">Delete one case, all history, or the entire account.</p></article>
+        <article class="card privacy-card"><strong data-i18n="priv4">Transparent AI processing</strong><p data-i18n="priv4d">Clearly disclose whenever text must be processed by an AI provider. Never promise “never leaves your device” unless that is technically true.</p></article>
+      </div>
+      <div class="card privacy-banner">
+        <strong data-i18n="prototype_note">Alpha privacy note</strong>
+        <p data-i18n="prototype_note_desc">This prototype runs locally in your browser and stores demo journey state only in local browser storage. It does not send your entries to a server.</p>
+      </div>
+    </section>
+  </main>
+</div>
+
+<div class="modal-backdrop" id="prayerModal" hidden>
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="prayerTitle">
+    <button class="close" id="closePrayer" aria-label="Close">×</button>
+    <span class="eyebrow" data-i18n="full_prayer">Full prayer</span>
+    <h2 id="prayerTitle"></h2>
+    <div id="prayerText" class="prayer-text"></div>
+    <div class="modal-actions">
+      <button class="secondary" id="speakPrayer" data-i18n="listen">▶ Listen</button>
+      <button class="primary compact" id="markPrayer" data-i18n="mark_complete">Mark completed</button>
+    </div>
+  </div>
+</div>
+
+
+<div class="modal-backdrop" id="catechismModal" hidden>
+  <div class="modal" role="dialog" aria-modal="true">
+    <button class="close" id="closeCatechism" aria-label="Close">×</button>
+    <span class="eyebrow">Catholic Catechism</span>
+    <h2 id="catechismTitle">Catechism reference</h2>
+    <div id="catechismBody" class="prayer-text">Loading…</div>
+    <div class="modal-actions">
+      <button class="secondary" id="listenCatechism">▶ Listen</button>
+      <a class="secondary link-button" id="officialCatechismLink" href="#" target="_blank" rel="noopener">Read full official Vatican section</a>
+    </div>
+  </div>
+</div>
+
+<div id="toast" class="toast"></div>
+<script src="app.js"></script>
+</body>
+</html>
